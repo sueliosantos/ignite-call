@@ -1,6 +1,9 @@
+import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
+import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Container, Form, Header, FormError } from './styles'
@@ -14,7 +17,7 @@ const registerFormShema = z.object({
     })
     .transform((username) => username.toLowerCase()),
 
-  nome: z.string().min(3, { message: 'Miníno de 3 letras' }),
+  nome: z.string().min(3, { message: 'Mínino de 3 letras' }),
 })
 
 type RegisterFormData = z.infer<typeof registerFormShema>
@@ -23,14 +26,31 @@ export default function Register() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormShema),
   })
 
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.query.username) {
+      setValue('username', String(router.query.username))
+    }
+  }, [router.query?.username, setValue])
+
   async function handleRegister(data: RegisterFormData) {
-    console.log(data)
+    try {
+      await api.post('/users', {
+        nome: data.nome,
+        username: data.username,
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
+
   return (
     <>
       <Container>

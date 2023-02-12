@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Form, FormAnnotation } from './styles'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/router'
 
 const clienteUserNameSchema = z.object({
   username: z
@@ -12,7 +13,7 @@ const clienteUserNameSchema = z.object({
     .regex(/^([a-z\\-]+)$/i, {
       message: 'Usuário pode ter apenas letras e hifens',
     })
-    .transform((username) => username.toLowerCase),
+    .transform((username) => username.toLowerCase()),
 })
 
 type ClienteUserNameFormData = z.infer<typeof clienteUserNameSchema>
@@ -21,13 +22,16 @@ export default function ClienteUserNameForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ClienteUserNameFormData>({
     resolver: zodResolver(clienteUserNameSchema),
   })
 
+  const router = useRouter()
+
   async function handlePreRegister(data: ClienteUserNameFormData) {
-    console.log(data)
+    const { username } = data
+    await router.push(`/register?username=${username}`)
   }
 
   return (
@@ -39,7 +43,7 @@ export default function ClienteUserNameForm() {
           placeholder="Seu usuário"
           {...register('username')}
         />
-        <Button size="sm" type="submit">
+        <Button size="sm" type="submit" disabled={isSubmitting}>
           Reservar
           <ArrowRight />
         </Button>
