@@ -14,8 +14,8 @@ datasource db {
 //npx prisma studio
 model User {
   id       String @id @default(uuid())
-  username String
-  nome     String @unique
+  username String @unique
+  nome     String
 
   created_at DateTime @default(now())
 
