@@ -10,7 +10,7 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
-  const { nome, username } = req.body
+  const { name, username } = req.body
 
   const userExists = await prisma.user.findUnique({
     where: {
@@ -25,7 +25,7 @@ export default async function handler(
   }
 
   const user = await prisma.user.create({
-    data: { nome, username },
+    data: { name, username },
   })
 
   setCookie(

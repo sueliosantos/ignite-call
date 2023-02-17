@@ -18,7 +18,7 @@ const registerFormShema = z.object({
     })
     .transform((username) => username.toLowerCase()),
 
-  nome: z.string().min(3, { message: 'Mínino de 3 letras' }),
+  name: z.string().min(3, { message: 'Mínino de 3 letras' }),
 })
 
 type RegisterFormData = z.infer<typeof registerFormShema>
@@ -44,7 +44,7 @@ export default function Register() {
   async function handleRegister(data: RegisterFormData) {
     try {
       await api.post('/users', {
-        nome: data.nome,
+        name: data.name,
         username: data.username,
       })
       await router.push('/register/conect-calendar')
@@ -82,9 +82,9 @@ export default function Register() {
           </label>
           <label>
             <Text size="sm">Nome completo</Text>
-            <TextInput placeholder="Seu nome" {...register('nome')} />
+            <TextInput placeholder="Seu nome" {...register('name')} />
             {errors.username && (
-              <FormError size="sm">{errors.nome?.message}</FormError>
+              <FormError size="sm">{errors.name?.message}</FormError>
             )}
           </label>
 
