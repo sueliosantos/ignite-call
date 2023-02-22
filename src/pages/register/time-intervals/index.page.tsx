@@ -1,3 +1,4 @@
+import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -96,9 +97,11 @@ export default function TimeIntervals() {
   const intervals = watch('intervals')
 
   async function handleSetTimeIntervals(data: any) {
-    const formData = data as TimeIntervalsFormOutput
+    const { intervals } = data as TimeIntervalsFormOutput
 
-    console.log(formData)
+    await api.post('/users/time-intervals', {
+      intervals,
+    })
   }
 
   return (
